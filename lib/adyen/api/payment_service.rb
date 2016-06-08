@@ -112,8 +112,10 @@ module Adyen
       def payment_request_body(content)
         validate_parameters!(:merchant_account, :reference, :amount => [:currency, :value])
         content << amount_partial
-        content << installments_partial if @params[:installments]
+        content << installments_partial if @params[:extra_options] && @params[:extra_options][:installments]
+        content << delivery_address_partial if @params[:extra_options] && @params[:extra_options][:delivery_address]
         content << shopper_partial if @params[:shopper]
+        content << social_security_number_partial if @params[:extra_options] && @params[:extra_options][:social_security_number]
         content << fraud_offset_partial if @params[:fraud_offset]
         content << capture_delay_partial if @params[:instant_capture]
         LAYOUT % [@params[:merchant_account], @params[:reference], content]
@@ -183,20 +185,26 @@ module Adyen
       end
 
       def installments_partial
-        if @params[:installments] && @params[:installments][:value]
-          INSTALLMENTS_PARTIAL % @params[:installments].values_at(:value)
+        if @params[:extra_options] && @params[:extra_options][:installments] && @params[:extra_options][:installments][:value]
+          INSTALLMENTS_PARTIAL % @params[:extra_options][:installments].values_at(:value)
         end
       end
 
       def social_security_number_partial
-        if @params[:social_security_number]
-          SOCIAL_SECURITY_NUMBER_PARTIAL % @params[:social_security_number]
+        if @params[:social_security_number] || (@params[:extra_options] && @params[:extra_options][:social_security_number])
+          SOCIAL_SECURITY_NUMBER_PARTIAL % @params[:social_security_number] || @params[:extra_options][:social_security_number]
         end
       end
 
       def selected_brand_partial
         if @params[:selected_brand]
           SELECTED_BRAND_PARTIAL % @params[:selected_brand]
+        end
+      end
+
+      def delivery_address_partial
+        if @params[:extra_options] && @params[:extra_options][:delivery_address]
+          DELIVERY_ADDRESS_PARTIAL % @params[:extra_options][:delivery_address].values_at(:city, :country, :house_number_or_name, :postal_code, :state_or_province, :street)
         end
       end
 

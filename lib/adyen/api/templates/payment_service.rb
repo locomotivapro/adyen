@@ -84,6 +84,18 @@ module Adyen
         </payment:installments>
       EOXML
 
+      # @private
+      DELIVERY_ADDRESS_PARTIAL = <<-EOXML
+        <payment:deliveryAddress>
+          <common:city>%s</common:city>
+          <common:country>%s</common:country>
+          <common:houseNumberOrName>%s</common:houseNumberOrName>
+          <common:postalCode>%s</common:postalCode>
+          <common:stateOrProvince>%s</common:stateOrProvince>
+          <common:street>%s</common:street>
+        </payment:deliveryAddress>
+      EOXML
+
       SOCIAL_SECURITY_NUMBER_PARTIAL = <<-EOXML
         <payment:socialSecurityNumber>%s</payment:socialSecurityNumber>
       EOXML

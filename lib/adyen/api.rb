@@ -152,11 +152,12 @@ module Adyen
     #
     # @return [PaymentService::AuthorisationResponse] The response object which holds the
     #                                                 authorisation status.
-    def authorise_payment(reference, amount, shopper, card, enable_recurring_contract = false, fraud_offset = nil, instant_capture = false)
+    def authorise_payment(reference, amount, shopper, card, extra_options={}, enable_recurring_contract = false, fraud_offset = nil, instant_capture = false)
       params = { :reference    => reference,
                  :amount       => amount,
                  :shopper      => shopper,
                  :card         => card,
+                 :extra_options => extra_options,
                  :recurring    => enable_recurring_contract,
                  :fraud_offset => fraud_offset,
                  :instant_capture => instant_capture }
