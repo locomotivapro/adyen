@@ -88,13 +88,15 @@ module Adyen
     #
     # @return [PaymentService::BilletResponse] The response object which holds the billet url.
     #
-    def generate_billet(reference, amount, shopper_name, social_security_number, selected_brand, delivery_date)
+    def generate_billet(reference, amount, shopper_name, social_security_number, selected_brand, delivery_date, ship_address=nil)
       params = { :reference              => reference,
                  :amount                 => amount,
                  :shopper_name           => shopper_name,
                  :social_security_number => social_security_number,
                  :selected_brand         => selected_brand,
-                 :delivery_date          => delivery_date }
+                 :delivery_date          => delivery_date,
+                 :extra_options          => ship_address
+      }
       PaymentService.new(params).generate_billet
     end
 
